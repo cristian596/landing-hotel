@@ -23,6 +23,13 @@ export function addDays(iso, days) {
   return new Date(time + days * DAY_MS).toISOString().slice(0, 10)
 }
 
+// Fecha larga en el idioma de `locale` (por ejemplo «3 de noviembre de 2026»).
+export function formatDate(iso, locale) {
+  const time = toUTC(iso)
+  if (time === null) return ''
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' }).format(time)
+}
+
 export function nightsBetween(checkIn, checkOut) {
   const start = toUTC(checkIn)
   const end = toUTC(checkOut)

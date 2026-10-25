@@ -48,6 +48,11 @@ export default function Footer({ onOpenLegal, onOpenCookieSettings }) {
                 </button>
               </li>
               <li>
+                <button type="button" onClick={() => onOpenLegal('dataTreatment')} className={linkClass}>
+                  {footer.dataTreatmentLabel}
+                </button>
+              </li>
+              <li>
                 <button type="button" onClick={() => onOpenLegal('cookies')} className={linkClass}>
                   {footer.cookiesLabel}
                 </button>

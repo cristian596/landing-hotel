@@ -1,6 +1,7 @@
 import { booking, location, plurals, rooms, roomsSection, search as searchCopy } from '../data/content'
 import { images } from '../data/images'
-import { buildBookingUrl, fill, formatPrice, plural, quoteRoom } from '../lib/booking'
+import { fill, formatPrice, plural, quoteRoom } from '../lib/booking'
+import { bookingHref } from '../lib/request'
 import Button from './Button'
 import Photo from './Photo'
 import Reveal from './Reveal'
@@ -45,7 +46,7 @@ function RoomRow({ room, reverse, search, quote }) {
           </p>
         )}
         <Button
-          href={roomQuote.bookable ? buildBookingUrl(booking, { ...search, roomId: room.id }) : `#${searchCopy.id}`}
+          href={roomQuote.bookable ? bookingHref({ ...search, roomId: room.id }) : `#${searchCopy.id}`}
           aria-label={fill(searchCopy.bookRoomLabel, { room: room.name })}
           className="mt-6"
         >

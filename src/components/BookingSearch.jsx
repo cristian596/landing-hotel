@@ -1,6 +1,7 @@
 import { useId } from 'react'
 import { booking, location, plurals, rooms, roomsSection, search as copy } from '../data/content'
-import { addDays, buildBookingUrl, fill, formatPrice, plural, quoteRoom, todayISO } from '../lib/booking'
+import { addDays, fill, formatPrice, plural, quoteRoom, todayISO } from '../lib/booking'
+import { bookingHref } from '../lib/request'
 import Button from './Button'
 import Reveal from './Reveal'
 
@@ -161,7 +162,7 @@ export default function BookingSearch({ search, onSearchChange, quote }) {
                         <Button
                           href={
                             roomQuote.bookable
-                              ? buildBookingUrl(booking, { ...search, roomId: room.id })
+                              ? bookingHref({ ...search, roomId: room.id })
                               : undefined
                           }
                           disabled={!roomQuote.bookable}
