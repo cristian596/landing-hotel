@@ -1,6 +1,6 @@
 # Plantilla de landing para hotel
 
-Landing de una sola página para hoteles pequeños. Incluye: **hero** con foto, **buscador de fechas** con precio en vivo, **habitaciones**, **servicios**, **galería**, **ubicación**, **llamada a la acción final**, una **página de reserva** propia (`#/reserva`) y **textos legales** (privacidad, tratamiento de datos personales y cookies) con **banner de cookies**, en **español**.
+Landing de una sola página para hoteles pequeños. Incluye: **hero** con foto, **buscador de fechas** con precio en vivo, **habitaciones**, **servicios**, **galería**, **ubicación**, **llamada a la acción final**, un **botón flotante de WhatsApp** con rebote, una **página de reserva** propia (`#/reserva`) y **textos legales** (privacidad, tratamiento de datos personales y cookies) con **banner de cookies**, en **español**.
 
 Está hecha con **React 19**, **Vite 8** y **Tailwind CSS 3**. No necesita base de datos ni servidor propio: la solicitud de reserva no se guarda en ningún sitio, sino que abre el correo del huésped con el mensaje ya escrito. Al compilarla se genera una carpeta de archivos estáticos (`dist`) que se publica en cualquier hosting estático, como Cloudflare Pages.
 
@@ -41,6 +41,7 @@ Otros comandos:
 | --- | --- |
 | Nombre del hotel, textos, habitaciones, precios, servicios, galería, dirección, teléfono y correo | `src/data/content.js` |
 | Modo de reserva, moneda, idioma y límites de huéspedes | `booking` en `src/data/content.js` |
+| Botón flotante de WhatsApp: número, texto del botón y mensaje inicial | `whatsapp` en `src/data/content.js` |
 | Textos de la página de reserva, correo que recibe las solicitudes y mensaje del correo | `request` en `src/data/content.js` |
 | Textos legales y de cookies | `legal` y `cookies` en `src/data/content.js` |
 | Fotos (id de Unsplash o ruta propia, y texto alternativo) y créditos de fotógrafos | `src/data/images.js` |
@@ -120,7 +121,8 @@ El flujo de reservas se adapta a como trabaje cada hotel. Los botones «Reservar
 | --- | --- | --- |
 | Recibir solicitudes por correo, sin pagar ni configurar nada | **A. Solicitud por correo** | Incluida y activa por defecto |
 | Ya usa un motor de reservas en línea | **B. Motor externo** | Incluida; se configura en `content.js` |
-| Recibir las reservas por WhatsApp | **C. WhatsApp** | Se integra bajo pedido |
+| Que los huéspedes le escriban por WhatsApp | **C. Botón de WhatsApp** | Incluido; se activa poniendo el número |
+| Recibir la solicitud de reserva completa por WhatsApp | **C+. Solicitud por WhatsApp** | Se integra bajo pedido |
 | Pagos en línea, calendario de disponibilidad real u otro sistema | **D. Integración a medida** | Se presupuesta aparte |
 
 ### Opción A: solicitud por correo (por defecto)
@@ -152,13 +154,29 @@ params: { checkIn: 'checkin', checkOut: 'checkout', guests: 'adultos', room: 'ha
 - Si el motor no acepta parámetros, pon `params: null` y se enlaza la URL tal cual.
 - Los nombres exactos de los parámetros los da el proveedor del motor. Si el motor funciona con un widget incrustado o con una API, es una integración a medida (opción D).
 
-### Opción C: reservas por WhatsApp
+### Opción C: botón flotante de WhatsApp
 
-No viene activada por defecto, pero se puede poner. El botón «Reservar» abriría WhatsApp con el mensaje ya escrito (habitación, fechas, huéspedes, total estimado y datos del huésped) hacia el número del hotel, y el huésped lo envía con un toque. Funcionaría igual que la opción A: sin servidor y sin guardar datos.
+En la esquina inferior derecha de todas las páginas hay un botón verde de WhatsApp que rebota sin parar para llamar la atención. Al pulsarlo se abre el chat con el hotel, con un mensaje inicial ya escrito. Se puede combinar con cualquiera de las otras opciones.
 
-- Se necesita el **número de WhatsApp del hotel**, con código de país y solo dígitos (por ejemplo `573001234567`).
-- Se puede combinar con la opción A, para que el huésped elija entre correo y WhatsApp.
-- Como es una personalización, se presupuesta aparte (ver sección 9).
+- Se configura en `whatsapp` en `content.js`:
+
+```js
+// Antes
+number: '570000000000',
+
+// Después
+number: '573001234567',
+```
+
+- `number` es el **número de WhatsApp del hotel**, con código de país y solo dígitos, sin `+`, espacios ni guiones. El que trae la plantilla es de ejemplo y no funciona.
+- `message` es el texto que aparece escrito al abrir el chat (la variable `{hotel}` se reemplaza por el nombre del hotel) y `label` es el nombre accesible del botón.
+- Si dejas `number` vacío (`''`), el botón no se muestra: útil para un hotel que no usa WhatsApp.
+- Mientras el banner de cookies está visible, el botón se coloca encima de él, y después baja a la esquina.
+- El rebote se detiene al pasar el cursor o enfocar el botón, y desaparece para quien tiene activada la opción «reducir movimiento» en su dispositivo. La animación se ajusta en `tailwind.config.js` (`whatsapp-bounce`) y el color en `whatsapp`.
+
+### Opción C+: solicitud de reserva por WhatsApp
+
+No viene activada, pero se puede poner. El botón «Reservar» enviaría la solicitud completa (habitación, fechas, huéspedes, total estimado y datos del huésped) por WhatsApp hacia el número del hotel, y el huésped la manda con un toque. Funcionaría igual que la opción A: sin servidor y sin guardar datos. Se puede ofrecer junto al correo, para que el huésped elija. Como es una personalización, se presupuesta aparte (ver sección 9).
 
 ### Notas sobre las reservas
 
@@ -178,6 +196,7 @@ Lista de verificación:
 - [ ] Modo de reserva elegido (`booking.mode`) y, si es correo, `request.to` con el correo real.
 - [ ] Si es motor externo: `booking.url` y `booking.params` reales, y probado con fechas de prueba.
 - [ ] Solicitud de reserva de prueba enviada desde un móvil real y recibida en el correo del hotel.
+- [ ] Número de WhatsApp real en `whatsapp.number` y probado desde un móvil (o vacío si el hotel no usa WhatsApp).
 - [ ] Textos «de ejemplo» eliminados (`search.taxNote`, `footer.sampleNotice`, `services.intro`, `location.text`).
 - [ ] Textos legales revisados **por un abogado**, con el nombre, el NIT, la dirección, el correo y la fecha de vigencia reales.
 - [ ] Las fotos son del hotel, o tienes derecho a usarlas, y los créditos de fotógrafos están en `photoCredits` de `images.js`.
@@ -203,7 +222,7 @@ No hacen falta redirecciones ni variables de entorno: la página de reserva func
 
 ## 9. Soporte y próximos pasos
 
-El soporte gratuito del proveedor dura **[PLAZO DE SOPORTE]** desde la entrega, con respuesta en **[TIEMPO DE RESPUESTA]**. El mantenimiento posterior se contrata aparte. La personalización de textos, fotos, colores, tarifas y contenido legal, y las integraciones (motor de reservas externo, WhatsApp, pagos u otros sistemas), se presupuestan por separado.
+El soporte gratuito del proveedor dura **[PLAZO DE SOPORTE]** desde la entrega, con respuesta en **[TIEMPO DE RESPUESTA]**. El mantenimiento posterior se contrata aparte. La personalización de textos, fotos, colores, tarifas y contenido legal, y las integraciones (motor de reservas externo, solicitud de reserva por WhatsApp, pagos u otros sistemas), se presupuestan por separado.
 
 **Si algo se rompe:**
 

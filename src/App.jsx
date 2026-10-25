@@ -11,6 +11,7 @@ import Location from './components/Location'
 import Navbar from './components/Navbar'
 import Rooms from './components/Rooms'
 import Services from './components/Services'
+import WhatsAppButton from './components/WhatsAppButton'
 import { booking, hotel, nav, request } from './data/content'
 import { useHashRoute } from './hooks/useHashRoute'
 import { addDays, todayISO, validateSearch } from './lib/booking'
@@ -71,6 +72,7 @@ export default function App() {
         )}
       </main>
       <Footer onOpenLegal={setLegalDoc} onOpenCookieSettings={() => setCookieSettingsOpen(true)} />
+      <WhatsAppButton />
       <LegalDialog doc={legalDoc} onClose={() => setLegalDoc(null)} />
       <CookieConsent
         settingsOpen={cookieSettingsOpen}

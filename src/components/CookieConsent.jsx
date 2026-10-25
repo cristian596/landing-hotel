@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { cookies, legal } from '../data/content'
 import Button from './Button'
 import Dialog from './Dialog'
@@ -66,6 +66,23 @@ function CookieSettingsForm({ initial, onSave }) {
 
 export default function CookieConsent({ settingsOpen, onSettingsOpenChange, onOpenPolicy }) {
   const [consent, setConsent] = useState(readConsent)
+  const bannerRef = useRef(null)
+  const bannerVisible = !consent && !settingsOpen
+
+  // Publica la altura del banner para que el botón de WhatsApp se coloque por encima mientras esté visible.
+  useEffect(() => {
+    const root = document.documentElement
+    const banner = bannerRef.current
+    if (!bannerVisible || !banner) return
+    const update = () => root.style.setProperty('--cookie-banner-height', `${banner.offsetHeight}px`)
+    update()
+    const observer = new ResizeObserver(update)
+    observer.observe(banner)
+    return () => {
+      observer.disconnect()
+      root.style.removeProperty('--cookie-banner-height')
+    }
+  }, [bannerVisible])
 
   function save(choices) {
     const value = { ...choices, necessary: true, date: new Date().toISOString() }
@@ -76,8 +93,8 @@ export default function CookieConsent({ settingsOpen, onSettingsOpenChange, onOp
 
   return (
     <>
-      {!consent && !settingsOpen && (
-        <div role="region" aria-label={cookies.settingsTitle} className="fixed inset-x-0 bottom-0 z-40 bg-ink text-paper">
+      {bannerVisible && (
+        <div ref={bannerRef} role="region" aria-label={cookies.settingsTitle} className="fixed inset-x-0 bottom-0 z-40 bg-ink text-paper">
           <div className="mx-auto flex max-w-page flex-col gap-4 px-gutter py-5 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
             <p className="max-w-3xl">
               {cookies.bannerText}{' '}

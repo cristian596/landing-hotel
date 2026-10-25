@@ -179,6 +179,15 @@ export const finalCta = {
   cta: { label: 'Reservar ahora', href: '#reservar' },
 }
 
+// Botón flotante de WhatsApp (abajo a la derecha, con rebote). Si `number` está vacío, el botón no se muestra.
+export const whatsapp = {
+  // Número de WhatsApp del hotel: solo dígitos, con código de país y sin «+» (por ejemplo 573001234567). Este es de ejemplo.
+  number: '570000000000',
+  label: 'Escribir por WhatsApp',
+  // Mensaje que se escribe al abrir el chat. Variable: {hotel}.
+  message: 'Hola, quisiera información sobre las reservas en {hotel}.',
+}
+
 // Página de solicitud de reserva (ruta #/reserva). Se usa cuando booking.mode es 'form'.
 // La solicitud se envía por correo: se abre el programa de correo del huésped con el mensaje ya redactado.
 export const request = {

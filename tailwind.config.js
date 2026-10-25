@@ -19,6 +19,10 @@ export default {
         DEFAULT: '#E7DFD1', // superficie
         strong: '#D8CCB8', // superficie marcada / fallback de imágenes
       },
+      whatsapp: {
+        DEFAULT: '#128C7E', // botón flotante de WhatsApp
+        strong: '#0E6E63',
+      },
     },
     fontFamily: {
       display: ['Fraunces', 'Georgia', 'serif'],
@@ -51,12 +55,18 @@ export default {
         300: '300ms',
       },
       keyframes: {
+        // Salto que se repite sin pausa: sube frenando y cae acelerando.
+        'whatsapp-bounce': {
+          '0%, 100%': { transform: 'translateY(0)', animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)' },
+          '50%': { transform: 'translateY(-16px)', animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)' },
+        },
         'hero-zoom': {
           from: { transform: 'scale(1.05)' },
           to: { transform: 'scale(1)' },
         },
       },
       animation: {
+        'whatsapp-bounce': 'whatsapp-bounce 1.2s infinite',
         'hero-zoom': 'hero-zoom 1800ms cubic-bezier(0.23, 1, 0.32, 1) both',
       },
     },
