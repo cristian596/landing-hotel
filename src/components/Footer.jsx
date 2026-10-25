@@ -1,5 +1,5 @@
-import { footer, hotel, location } from '../data/content'
 import { photoCredits } from '../data/images'
+import { useContent } from '../i18n/useLanguage'
 
 const year = new Date().getFullYear()
 
@@ -7,6 +7,7 @@ const linkClass =
   'inline-flex min-h-11 items-center text-left underline underline-offset-4 can-hover:hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
 
 export default function Footer({ onOpenLegal, onOpenCookieSettings }) {
+  const { footer, hotel, location } = useContent()
   return (
     <footer className="mt-section bg-sand">
       <div className="mx-auto max-w-page px-gutter py-16 lg:py-20">

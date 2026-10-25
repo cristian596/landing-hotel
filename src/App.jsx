@@ -12,11 +12,12 @@ import Navbar from './components/Navbar'
 import Rooms from './components/Rooms'
 import Services from './components/Services'
 import WhatsAppButton from './components/WhatsAppButton'
-import { booking, hotel, nav, request } from './data/content'
 import { useHashRoute } from './hooks/useHashRoute'
+import { useContent } from './i18n/useLanguage'
+import { useSeo } from './i18n/useSeo'
 import { addDays, todayISO, validateSearch } from './lib/booking'
 
-function initialSearch() {
+function initialSearch(booking) {
   const checkIn = addDays(todayISO(), booking.defaultCheckInOffset)
   return {
     checkIn,
@@ -26,16 +27,16 @@ function initialSearch() {
 }
 
 export default function App() {
-  const [search, setSearch] = useState(initialSearch)
+  const { booking, nav } = useContent()
+  const [search, setSearch] = useState(() => initialSearch(booking))
   const [legalDoc, setLegalDoc] = useState(null)
   const [cookieSettingsOpen, setCookieSettingsOpen] = useState(false)
   const { route, hash } = useHashRoute()
   const quote = validateSearch(search, booking)
   const isRequest = route.name === 'request'
 
-  useEffect(() => {
-    document.title = isRequest ? `${request.title} · ${hotel.name}` : hotel.name
-  }, [isRequest])
+  // Título, descripción, vista previa y datos estructurados en el idioma actual.
+  useSeo(isRequest ? 'request' : 'home')
 
   // Al cambiar de página con el hash, el navegador no desplaza solo: arriba en la solicitud, a la sección en la portada.
   useEffect(() => {

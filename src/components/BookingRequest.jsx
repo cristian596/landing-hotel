@@ -1,13 +1,15 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { booking, location, plurals, request, rooms, roomsSection, search as copy } from '../data/content'
+import { useContent } from '../i18n/useLanguage'
 import { addDays, fill, formatDate, formatPrice, plural, stayTotal, todayISO } from '../lib/booking'
 import {
   buildRequestMessage,
   errorMessage,
   initialRequest,
   mailtoHref,
+  requestChannels,
   requestRecipient,
   validateRequest,
+  whatsappHref,
 } from '../lib/request'
 import Button from './Button'
 
@@ -36,6 +38,7 @@ function Field({ id, label, hint, error, children }) {
 }
 
 function Summary({ values, check }) {
+  const { booking, plurals, request, search: copy } = useContent()
   const { stay, room } = check
   const money = (amount) => formatPrice(amount, booking)
 
@@ -82,10 +85,13 @@ function Summary({ values, check }) {
 }
 
 function Sent({ message, onEdit }) {
+  const content = useContent()
+  const { request } = content
   const titleRef = useRef(null)
   const [copied, setCopied] = useState(false)
-  const to = requestRecipient()
-  const href = mailtoHref(message)
+  const isWhatsApp = message.channel === 'whatsapp'
+  const to = requestRecipient(content)
+  const href = isWhatsApp ? whatsappHref(content, message) : mailtoHref(content, message)
 
   useEffect(() => {
     titleRef.current?.focus()
@@ -105,8 +111,12 @@ function Sent({ message, onEdit }) {
       <h2 ref={titleRef} tabIndex={-1} className="font-display text-title outline-none">
         {request.success.title}
       </h2>
-      <p className="mt-4 max-w-prose">{fill(request.success.text, { email: to })}</p>
-      <p className="mt-4 max-w-prose">{fill(request.success.notOpened, { email: to })}</p>
+      <p className="mt-4 max-w-prose">
+        {fill(isWhatsApp ? request.success.whatsappText : request.success.text, { email: to })}
+      </p>
+      <p className="mt-4 max-w-prose">
+        {fill(isWhatsApp ? request.success.whatsappNotOpened : request.success.notOpened, { email: to })}
+      </p>
 
       <label htmlFor="mensaje" className="mt-6 block font-semibold">
         {request.success.messageLabel}
@@ -120,7 +130,9 @@ function Sent({ message, onEdit }) {
       />
 
       <div className="mt-6 flex flex-wrap gap-3">
-        <Button href={href}>{request.success.openMail}</Button>
+        <Button href={href} {...(isWhatsApp ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+          {isWhatsApp ? request.success.openWhatsApp : request.success.openMail}
+        </Button>
         <Button variant="dark" onClick={copyMessage}>
           {request.success.copy}
         </Button>
@@ -139,17 +151,19 @@ function Sent({ message, onEdit }) {
 }
 
 export default function BookingRequest({ params, fallback, onOpenLegal }) {
+  const content = useContent()
+  const { booking, location, request, rooms, roomsSection, search: copy } = content
   const ids = useId()
   const titleRef = useRef(null)
-  const [values, setValues] = useState(() => initialRequest(params, fallback))
+  const [values, setValues] = useState(() => initialRequest(content, params, fallback))
   const [attempted, setAttempted] = useState(false)
   const [message, setMessage] = useState(null)
   const today = todayISO()
-  const check = validateRequest(values)
+  const check = validateRequest(content, values)
   const fieldId = (name) => `${ids}-${name}`
   const errorFor = (field) => {
     const error = attempted ? check.errors.find((item) => item.field === field) : null
-    return error ? errorMessage(error) : null
+    return error ? errorMessage(content, error) : null
   }
   const aria = (field) => ({
     'aria-invalid': Boolean(errorFor(field)),
@@ -161,16 +175,29 @@ export default function BookingRequest({ params, fallback, onOpenLegal }) {
     titleRef.current?.focus()
   }, [])
 
-  function handleSubmit(event) {
-    event.preventDefault()
+  const channels = requestChannels(content)
+
+  // Valida y envía la solicitud por el canal elegido: abre el correo o WhatsApp con el mensaje ya redactado.
+  function send(channel) {
     setAttempted(true)
     if (!check.valid) {
       document.getElementById(fieldId(check.errors[0].field))?.focus()
       return
     }
-    const next = buildRequestMessage(values, check.room, check.stay)
+    const next = { ...buildRequestMessage(content, values, check.room, check.stay), channel }
     setMessage(next)
-    window.location.assign(mailtoHref(next))
+    if (channel === 'whatsapp') window.open(whatsappHref(content, next), '_blank', 'noopener,noreferrer')
+    else window.location.assign(mailtoHref(content, next))
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault()
+    send(channels[0])
+  }
+
+  const channelLabel = (channel) => {
+    if (channels.length < 2) return request.submit
+    return channel === 'whatsapp' ? request.submitWhatsApp : request.submitEmail
   }
 
   const visibleErrors = attempted ? check.errors : []
@@ -211,7 +238,7 @@ export default function BookingRequest({ params, fallback, onOpenLegal }) {
                     <p className="font-semibold">{request.errorsTitle}</p>
                     <ul className="mt-2 list-inside list-disc">
                       {visibleErrors.map((error) => (
-                        <li key={`${error.field}-${error.code}`}>{errorMessage(error)}</li>
+                        <li key={`${error.field}-${error.code}`}>{errorMessage(content, error)}</li>
                       ))}
                     </ul>
                   </div>
@@ -354,9 +381,19 @@ export default function BookingRequest({ params, fallback, onOpenLegal }) {
                   )}
                 </div>
 
-                <Button type="submit" className="w-full sm:w-auto">
-                  {request.submit}
-                </Button>
+                <div className="flex flex-wrap gap-3">
+                  {channels.map((channel, index) => (
+                    <Button
+                      key={channel}
+                      type={index === 0 ? 'submit' : 'button'}
+                      variant={index === 0 ? 'primary' : 'dark'}
+                      onClick={index === 0 ? undefined : () => send(channel)}
+                      className="w-full sm:w-auto"
+                    >
+                      {channelLabel(channel)}
+                    </Button>
+                  ))}
+                </div>
               </form>
             )}
           </div>

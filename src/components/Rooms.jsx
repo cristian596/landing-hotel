@@ -1,5 +1,5 @@
-import { booking, location, plurals, rooms, roomsSection, search as searchCopy } from '../data/content'
 import { images } from '../data/images'
+import { useContent } from '../i18n/useLanguage'
 import { fill, formatPrice, plural, quoteRoom } from '../lib/booking'
 import { bookingHref } from '../lib/request'
 import Button from './Button'
@@ -7,6 +7,8 @@ import Photo from './Photo'
 import Reveal from './Reveal'
 
 function RoomRow({ room, reverse, search, quote }) {
+  const content = useContent()
+  const { booking, plurals, roomsSection, search: searchCopy } = content
   const roomQuote = quoteRoom(room, quote)
   const titleId = `habitacion-${room.id}`
 
@@ -46,7 +48,7 @@ function RoomRow({ room, reverse, search, quote }) {
           </p>
         )}
         <Button
-          href={roomQuote.bookable ? bookingHref({ ...search, roomId: room.id }) : `#${searchCopy.id}`}
+          href={roomQuote.bookable ? bookingHref(content, { ...search, roomId: room.id }) : `#${searchCopy.id}`}
           aria-label={fill(searchCopy.bookRoomLabel, { room: room.name })}
           className="mt-6"
         >
@@ -58,6 +60,7 @@ function RoomRow({ room, reverse, search, quote }) {
 }
 
 export default function Rooms({ search, quote }) {
+  const { location, rooms, roomsSection } = useContent()
   return (
     <section id={roomsSection.id} aria-labelledby="rooms-title" className="mx-auto mt-section max-w-page px-gutter">
       <div className="max-w-3xl">

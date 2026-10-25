@@ -1,7 +1,8 @@
-import { services } from '../data/content'
+import { useContent } from '../i18n/useLanguage'
 import Reveal from './Reveal'
 
 export default function Services() {
+  const { services } = useContent()
   return (
     <section id={services.id} aria-labelledby="services-title" className="mx-auto mt-section max-w-page px-gutter">
       <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">

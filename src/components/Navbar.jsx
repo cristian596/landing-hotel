@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import { hero, hotel, nav } from '../data/content'
+import { useContent } from '../i18n/useLanguage'
 import Button from './Button'
+import LanguageSwitch from './LanguageSwitch'
 
 export default function Navbar() {
+  const { hero, hotel, nav } = useContent()
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -17,7 +19,7 @@ export default function Navbar() {
   const close = () => setOpen(false)
 
   return (
-    <header className="relative z-30 bg-paper">
+    <header className="sticky top-0 z-30 bg-paper">
       <nav
         aria-label={nav.label}
         className="mx-auto flex max-w-page items-center justify-between gap-6 px-gutter py-4 lg:py-6"
@@ -37,6 +39,7 @@ export default function Navbar() {
         </ul>
 
         <div className="flex shrink-0 items-center gap-2">
+          <LanguageSwitch />
           <Button href={nav.cta.href} className="hidden sm:inline-flex">
             {nav.cta.label}
           </Button>

@@ -1,11 +1,12 @@
-import { hero, hotel } from '../data/content'
 import { images } from '../data/images'
 import Button from './Button'
 import Photo from './Photo'
 import Reveal from './Reveal'
+import { useContent } from '../i18n/useLanguage'
 
 // Móvil: texto arriba y foto alta debajo. Escritorio: foto grande con el texto en un bloque recortado abajo a la izquierda.
 export default function Hero() {
+  const { hero, hotel } = useContent()
   return (
     <section id={hero.id} aria-labelledby="hero-title" className="mx-auto max-w-page px-gutter">
       <div className="flex flex-col lg:relative lg:min-h-[86vh] lg:justify-end">

@@ -1,30 +1,31 @@
 import { useEffect, useRef, useState } from 'react'
-import { cookies, legal } from '../data/content'
+import { useContent } from '../i18n/useLanguage'
 import Button from './Button'
 import Dialog from './Dialog'
 
-function readConsent() {
+function readConsent(storageKey) {
   try {
-    const stored = window.localStorage.getItem(cookies.storageKey)
+    const stored = window.localStorage.getItem(storageKey)
     return stored ? JSON.parse(stored) : null
   } catch {
     return null
   }
 }
 
-function writeConsent(value) {
+function writeConsent(storageKey, value) {
   try {
-    window.localStorage.setItem(cookies.storageKey, JSON.stringify(value))
+    window.localStorage.setItem(storageKey, JSON.stringify(value))
   } catch {
     // Sin almacenamiento disponible: la elección dura solo esta visita.
   }
 }
 
-function allCategories(accepted) {
+function allCategories(cookies, accepted) {
   return Object.fromEntries(cookies.categories.map((category) => [category.id, category.required || accepted]))
 }
 
 function CookieSettingsForm({ initial, onSave }) {
+  const { cookies } = useContent()
   const [choices, setChoices] = useState(initial)
 
   return (
@@ -65,7 +66,8 @@ function CookieSettingsForm({ initial, onSave }) {
 }
 
 export default function CookieConsent({ settingsOpen, onSettingsOpenChange, onOpenPolicy }) {
-  const [consent, setConsent] = useState(readConsent)
+  const { cookies, legal } = useContent()
+  const [consent, setConsent] = useState(() => readConsent(cookies.storageKey))
   const bannerRef = useRef(null)
   const bannerVisible = !consent && !settingsOpen
 
@@ -86,7 +88,7 @@ export default function CookieConsent({ settingsOpen, onSettingsOpenChange, onOp
 
   function save(choices) {
     const value = { ...choices, necessary: true, date: new Date().toISOString() }
-    writeConsent(value)
+    writeConsent(cookies.storageKey, value)
     setConsent(value)
     onSettingsOpenChange(false)
   }
@@ -103,10 +105,10 @@ export default function CookieConsent({ settingsOpen, onSettingsOpenChange, onOp
               </button>
             </p>
             <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex sm:flex-wrap">
-              <Button variant="light" onClick={() => save(allCategories(true))}>
+              <Button variant="light" onClick={() => save(allCategories(cookies, true))}>
                 {cookies.acceptAll}
               </Button>
-              <Button variant="light" onClick={() => save(allCategories(false))}>
+              <Button variant="light" onClick={() => save(allCategories(cookies, false))}>
                 {cookies.rejectAll}
               </Button>
               <Button variant="primary" onClick={() => onSettingsOpenChange(true)} className="col-span-2 sm:col-span-1">
@@ -123,7 +125,7 @@ export default function CookieConsent({ settingsOpen, onSettingsOpenChange, onOp
         title={cookies.settingsTitle}
         closeLabel={legal.closeLabel}
       >
-        {settingsOpen && <CookieSettingsForm initial={consent ?? allCategories(false)} onSave={save} />}
+        {settingsOpen && <CookieSettingsForm initial={consent ?? allCategories(cookies, false)} onSave={save} />}
       </Dialog>
     </>
   )

@@ -1,9 +1,10 @@
-import { hotel, whatsapp } from '../data/content'
 import { fill } from '../lib/booking'
+import { useContent } from '../i18n/useLanguage'
 
 // Botón flotante de WhatsApp, abajo a la derecha, con rebote permanente. Si `whatsapp.number` está vacío no se muestra.
 // Mientras el banner de cookies está visible sube por encima de él (CookieConsent publica su altura en --cookie-banner-height).
 export default function WhatsAppButton() {
+  const { hotel, whatsapp } = useContent()
   const number = whatsapp.number.replace(/\D/g, '')
   if (!number) return null
 

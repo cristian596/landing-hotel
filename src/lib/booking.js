@@ -92,7 +92,7 @@ export function plural(forms, count, locale) {
   return fill(template, { count: new Intl.NumberFormat(locale).format(count) })
 }
 
-export function buildBookingUrl(booking, { checkIn, checkOut, guests, roomId } = {}) {
+export function buildBookingUrl(booking, { checkIn, checkOut, guests, roomId, language, currency, price, total } = {}) {
   if (!booking.params) return booking.url
 
   let url
@@ -102,7 +102,7 @@ export function buildBookingUrl(booking, { checkIn, checkOut, guests, roomId } =
     return booking.url
   }
 
-  const values = { checkIn, checkOut, guests, room: roomId }
+  const values = { checkIn, checkOut, guests, room: roomId, language, currency, price, total }
   for (const [key, param] of Object.entries(booking.params)) {
     if (param && values[key] !== undefined && values[key] !== '') url.searchParams.set(param, values[key])
   }

@@ -1,5 +1,5 @@
-import { gallery } from '../data/content'
 import { images } from '../data/images'
+import { useContent } from '../i18n/useLanguage'
 import Photo from './Photo'
 import Reveal from './Reveal'
 
@@ -16,6 +16,7 @@ const mosaic = [
 
 // Móvil y tableta: carrusel horizontal con scroll-snap. Escritorio: mosaico asimétrico.
 export default function Gallery() {
+  const { gallery } = useContent()
   return (
     <section id={gallery.id} aria-labelledby="gallery-title" className="mx-auto mt-section max-w-page px-gutter">
       <Reveal as="h2" id="gallery-title" className="font-display text-section">

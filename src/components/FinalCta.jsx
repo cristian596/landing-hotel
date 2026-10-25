@@ -1,8 +1,9 @@
-import { finalCta } from '../data/content'
+import { useContent } from '../i18n/useLanguage'
 import Button from './Button'
 import Reveal from './Reveal'
 
 export default function FinalCta() {
+  const { finalCta } = useContent()
   return (
     <section aria-labelledby="cta-title" className="mx-auto mt-section max-w-page px-gutter">
       <Reveal className="rounded bg-ink px-6 py-16 text-paper sm:px-12 lg:px-20 lg:py-24">

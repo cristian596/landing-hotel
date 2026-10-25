@@ -1,10 +1,11 @@
-import { location } from '../data/content'
 import { images } from '../data/images'
+import { useContent } from '../i18n/useLanguage'
 import Button from './Button'
 import Photo from './Photo'
 import Reveal from './Reveal'
 
 export default function Location() {
+  const { location } = useContent()
   return (
     <section id={location.id} aria-labelledby="location-title" className="mx-auto mt-section max-w-page px-gutter">
       <div className="grid gap-10 lg:grid-cols-12 lg:items-end lg:gap-8">

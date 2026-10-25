@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import { booking, location, plurals, rooms, roomsSection, search as copy } from '../data/content'
+import { useContent } from '../i18n/useLanguage'
 import { addDays, fill, formatPrice, plural, quoteRoom, todayISO } from '../lib/booking'
 import { bookingHref } from '../lib/request'
 import Button from './Button'
@@ -12,6 +12,8 @@ const stepperClass =
   'inline-flex h-12 w-12 shrink-0 items-center justify-center rounded bg-paper text-lead font-semibold transition-transform duration-150 ease-out-strong active:scale-[0.97] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:active:scale-100 motion-reduce:transition-none motion-reduce:active:transform-none'
 
 export default function BookingSearch({ search, onSearchChange, quote }) {
+  const content = useContent()
+  const { booking, location, plurals, rooms, roomsSection, search: copy } = content
   const ids = useId()
   const today = todayISO()
   const guests = Number(search.guests)
@@ -162,7 +164,7 @@ export default function BookingSearch({ search, onSearchChange, quote }) {
                         <Button
                           href={
                             roomQuote.bookable
-                              ? bookingHref({ ...search, roomId: room.id })
+                              ? bookingHref(content, { ...search, roomId: room.id })
                               : undefined
                           }
                           disabled={!roomQuote.bookable}

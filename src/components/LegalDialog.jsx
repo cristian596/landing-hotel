@@ -1,9 +1,10 @@
-import { legal } from '../data/content'
+import { useContent } from '../i18n/useLanguage'
 import Dialog from './Dialog'
 
 // Muestra una política legal. `doc` es 'privacy', 'dataTreatment', 'cookies' o null.
 // Cada elemento de `body` es un párrafo (texto), un subtítulo ({ heading }) o una lista ({ list }).
 export default function LegalDialog({ doc, onClose }) {
+  const { legal } = useContent()
   const page = doc ? legal[doc] : null
 
   return (
