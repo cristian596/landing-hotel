@@ -67,7 +67,7 @@ export const site = {
     // Si está vacía se usa la foto `hero` de images.js recortada a ese tamaño.
     ogImage: '',
     // true: no indexar el sitio (para demos o pruebas). Añade noindex y bloquea todo en robots.txt.
-    noindex: false,
+    noindex: true,
     // Tipo de negocio de schema.org: 'Hotel', 'Resort', 'BedAndBreakfast', 'Hostel', 'Motel'…
     schemaType: 'Hotel',
     // Coordenadas del hotel para el mapa de Google, por ejemplo { latitude: 10.4236, longitude: -75.5453 }. null = no se envían.
