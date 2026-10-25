@@ -31,7 +31,7 @@ export default function Navbar() {
         <ul className="hidden shrink-0 items-center gap-8 lg:flex">
           {nav.links.map((link) => (
             <li key={link.href}>
-              <a href={link.href} className="inline-flex min-h-11 items-center font-semibold can-hover:hover:text-accent">
+              <a href={link.href} className="inline-flex min-h-11 items-center font-semibold transition-colors duration-150 can-hover:hover:text-accent">
                 {link.label}
               </a>
             </li>
@@ -58,7 +58,7 @@ export default function Navbar() {
       <div
         id="menu-movil"
         inert={!open}
-        className={`absolute inset-x-0 top-full origin-top bg-sand px-gutter pb-8 pt-4 transition-[transform,opacity] duration-200 ease-out-strong motion-reduce:transform-none motion-reduce:transition-none lg:hidden ${open ? 'scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'}`}
+        className={`absolute inset-x-0 top-full origin-top bg-sand px-gutter pb-8 pt-4 transition-[transform,opacity] duration-200 ease-out-strong motion-reduce:transform-none motion-reduce:duration-150 lg:hidden ${open ? 'scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'}`}
       >
         <ul>
           {nav.links.map((link) => (

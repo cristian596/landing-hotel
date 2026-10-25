@@ -4,7 +4,7 @@ import { useContent } from '../i18n/useLanguage'
 const year = new Date().getFullYear()
 
 const linkClass =
-  'inline-flex min-h-11 items-center text-left underline underline-offset-4 can-hover:hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
+  'inline-flex min-h-11 items-center text-left underline underline-offset-4 transition-colors duration-150 can-hover:hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
 
 export default function Footer({ onOpenLegal, onOpenCookieSettings }) {
   const { footer, hotel, location } = useContent()

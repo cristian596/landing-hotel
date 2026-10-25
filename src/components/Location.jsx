@@ -34,7 +34,7 @@ export default function Location() {
             <div>
               <dt className="font-semibold">{location.phoneLabel}</dt>
               <dd>
-                <a href={`tel:${location.phone.replace(/[^\d+]/g, '')}`} className="inline-flex min-h-11 items-center underline underline-offset-4 can-hover:hover:text-accent">
+                <a href={`tel:${location.phone.replace(/[^\d+]/g, '')}`} className="inline-flex min-h-11 items-center underline underline-offset-4 transition-colors duration-150 can-hover:hover:text-accent">
                   {location.phone}
                 </a>
               </dd>
@@ -42,7 +42,7 @@ export default function Location() {
             <div>
               <dt className="font-semibold">{location.emailLabel}</dt>
               <dd className="[overflow-wrap:anywhere]">
-                <a href={`mailto:${location.email}`} className="inline-flex min-h-11 items-center underline underline-offset-4 can-hover:hover:text-accent">
+                <a href={`mailto:${location.email}`} className="inline-flex min-h-11 items-center underline underline-offset-4 transition-colors duration-150 can-hover:hover:text-accent">
                   {location.email}
                 </a>
               </dd>

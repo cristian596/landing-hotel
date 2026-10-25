@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useContent } from '../i18n/useLanguage'
 import Button from './Button'
 import Dialog from './Dialog'
@@ -72,7 +72,8 @@ export default function CookieConsent({ settingsOpen, onSettingsOpenChange, onOp
   const bannerVisible = !consent && !settingsOpen
 
   // Publica la altura del banner para que el botón de WhatsApp se coloque por encima mientras esté visible.
-  useEffect(() => {
+  // Antes del primer pintado, para que el botón de WhatsApp no «salte» al cargar la página.
+  useLayoutEffect(() => {
     const root = document.documentElement
     const banner = bannerRef.current
     if (!bannerVisible || !banner) return

@@ -29,7 +29,7 @@ export default function Gallery() {
             as="li"
             key={`${item.image}-${index}`}
             step={index % 3}
-            className={`w-[80%] shrink-0 snap-start sm:w-[45%] lg:w-auto ${mosaic[index % mosaic.length]}`}
+            className={`w-[80%] shrink-0 snap-start max-lg:translate-y-0 max-lg:delay-0 sm:w-[45%] lg:w-auto ${mosaic[index % mosaic.length]}`}
           >
             <figure className="flex h-full flex-col">
               <Photo

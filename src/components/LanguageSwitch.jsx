@@ -18,7 +18,7 @@ export default function LanguageSwitch({ className = '' }) {
             aria-label={option.name}
             title={option.name}
             onClick={() => setLanguage(option.code)}
-            className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded px-3 text-base font-semibold transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent motion-reduce:transition-none ${active ? 'bg-ink text-paper' : 'can-hover:hover:bg-sand-strong'}`}
+            className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded px-3 text-base font-semibold transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${active ? 'bg-ink text-paper' : 'can-hover:hover:bg-sand-strong'}`}
           >
             {option.short}
           </button>

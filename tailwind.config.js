@@ -1,5 +1,8 @@
 import plugin from 'tailwindcss/plugin'
 
+// Curva de salida fuerte, única para toda la plantilla (clase `ease-out-strong` y animación de la portada).
+const easeOutStrong = 'cubic-bezier(0.23, 1, 0.32, 1)'
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
@@ -45,7 +48,7 @@ export default {
         page: '90rem',
       },
       transitionTimingFunction: {
-        'out-strong': 'cubic-bezier(0.23, 1, 0.32, 1)',
+        'out-strong': easeOutStrong,
       },
       transitionDelay: {
         0: '0ms',
@@ -67,7 +70,7 @@ export default {
       },
       animation: {
         'whatsapp-bounce': 'whatsapp-bounce 1.2s infinite',
-        'hero-zoom': 'hero-zoom 1800ms cubic-bezier(0.23, 1, 0.32, 1) both',
+        'hero-zoom': `hero-zoom 1800ms ${easeOutStrong} both`,
       },
     },
   },

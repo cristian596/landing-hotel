@@ -206,7 +206,7 @@ export default function BookingRequest({ params, fallback, onOpenLegal }) {
     <section aria-labelledby="request-title" className="mx-auto max-w-page px-gutter pt-6 lg:pt-10">
       <a
         href={request.backHref}
-        className={`inline-flex min-h-11 items-center font-semibold underline underline-offset-4 can-hover:hover:text-accent ${focusRing}`}
+        className={`inline-flex min-h-11 items-center font-semibold underline underline-offset-4 transition-colors duration-150 can-hover:hover:text-accent ${focusRing}`}
       >
         ← {request.backLabel}
       </a>
@@ -367,7 +367,7 @@ export default function BookingRequest({ params, fallback, onOpenLegal }) {
                       <button
                         type="button"
                         onClick={() => onOpenLegal('dataTreatment')}
-                        className={`underline underline-offset-4 can-hover:hover:text-accent ${focusRing}`}
+                        className={`underline underline-offset-4 transition-colors duration-150 can-hover:hover:text-accent ${focusRing}`}
                       >
                         {request.consent.link}
                       </button>
